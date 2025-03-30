@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACHI PROYECT!</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+<div id="contenedor">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <main>
+        <form id="formularioRegistro"
+              NAME="RegistroDactilar"
+              METHOD="POST">
+            <!-- Contenido del formulario -->
+            <h1>Formulario de Registro de alumno</h1>
+            <label id="LABEL">
+                Complete el formulario con los datos del estudiante
+            </label>
+
+            <div>
+                <input
+                        type="text"
+                        name="txtNombre"
+                        size="40"
+                        placeholder="Nombres"
+                        TITLE=" Nombres de alumnno:"
+                        REQUIRED>
+
+                <input
+                        type="text"
+                        name="txtApellido"
+                        size="40"
+                        placeholder="Apellidos"
+                        TITLE="Apellidos de alumnno:"
+                        REQUIRED>
+
+                <input
+                        type="text"
+                        name="txtTelefono"
+                        size="40"
+                        placeholder="(123)-123456789"
+                        TITLE="Telefono:"
+                        REQUIRED>
+
+                <input
+                        type="text"
+                        name="txtCorreo"
+                        size="40"
+                        placeholder="@gmail.com"
+                        title="Correo Electronico"
+                >
+
+
+                <div id="imagenHuella">
+                    <button onclick="controlarR503('Encendido')" id="activarSensor">Activar sensor</button>
+                    <div id="spinner" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Esperando huella...</p>
+                    </div>
+                    <div id="successCheck" style="display: none; font-size: 20px; color: green;">
+                        ✅ Huella capturada
+                    </div>
+                </div>
+
+                <button type="submit">Registrar</button>
+            </div>
+
+        </form>
+    </main>
+
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/script.js}"></script>
+<script>
+    // Función para activar registro en r503
+    function controlarR503(estado) {
+        // Aquí se hace una petición POST al controlador de Spring Boot
+        fetch("/R503/control?estado=" + estado, {
+            method: "POST", // Especificamos que será una petición POST
+        })
+        .then(response => response.text())  // Convertimos la respuesta en texto
+        .then(data => alert(data))          // Mostramos el mensaje de la respuesta
+        .catch(error => console.error('Error:', error));  // Capturamos errores si ocurren
+    }
+</script>
+
+
+</body>
+</html>
