@@ -1,4 +1,5 @@
 package com.example.SACHI;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*; //Nos permite usar los encabezados propios de una apirest
 import org.springframework.web.client.RestTemplate;//Esto sirve para hacer peticiones HTTP desde Spring Boot hacia otro servidor
 @CrossOrigin(origins = "http://localhost:8080")
@@ -28,4 +29,16 @@ public class R503controller {
         return "Spring Boot: " + (R503.equalsIgnoreCase("Encendido") ? "LED Encendido" : "LED Apagado") +
                 " | Respuesta ESP32: " + respuestaESP;
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFingerprint(@RequestBody FingerprintRequest request) {
+        // Aquí procesamos directamente la huella sin servicio
+        String base64Template = request.getTemplate();
+        System.out.println("Template recibido (Base64): " + base64Template);
+
+        // Puedes hacer más cosas aquí si quieres (como validación, guardado, etc.)
+        return ResponseEntity.ok("Huella digital recibida correctamente.");
+    }
 }
+
+
