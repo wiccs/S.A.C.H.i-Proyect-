@@ -15,7 +15,8 @@
     <div th:replace="fragments/sidebar :: sidebar"></div>
 
     <main>
-        <form id="formularioRegistro"
+        <form th:action="@{/R503/registrar}"
+              id="formularioRegistro"
               NAME="RegistroDactilar"
               METHOD="POST">
             <!-- Contenido del formulario -->
@@ -57,9 +58,13 @@
                         title="Correo Electronico"
                 >
 
+                <!--  Campo oculto para la huella -->
+                <input  type="text" name="plantillaHuella" id="plantillaHuella">
 
                 <div id="imagenHuella">
                     <button onclick="controlarR503('Encendido')" id="activarSensor">Activar sensor</button>
+                    <button type="button" onclick="obtenerPlantillaHuella()">Obtener plantilla de huella</button>
+
                     <div id="spinner" style="display: none;">
                         <div class="spinner"></div>
                         <p>Esperando huella...</p>
@@ -92,6 +97,35 @@
         .catch(error => console.error('Error:', error));  // Capturamos errores si ocurren
     }
 </script>
+
+<script>
+    // Función para obtener el template desde Spring Boot
+    function obtenerPlantillaHuella() {
+        // Hacemos una solicitud GET para obtener la plantilla de huella desde Spring Boot
+        fetch("/R503/getTemplate")
+            .then(response => response.text())  // Recibimos la plantilla de huella en Base64
+            .then(data => {
+                // Colocamos la plantilla en el campo de entrada del formulario
+                document.getElementById("plantillaHuella").value = data;
+
+                // Mostrar mensaje de éxito o hacer alguna acción adicional
+                document.getElementById("spinner").style.display = "none";  // Ocultar el spinner
+                document.getElementById("successCheck").style.display = "block";  // Mostrar el mensaje de éxito
+            })
+            .catch(error => {
+                console.error("Error al obtener la huella:", error);
+                alert("Hubo un problema al obtener la huella.");
+                document.getElementById("spinner").style.display = "none";  // Ocultar el spinner en caso de error
+            });
+
+        // Mostrar el spinner mientras se espera la respuesta
+        document.getElementById("spinner").style.display = "flex";
+        document.getElementById("successCheck").style.display = "none";  // Asegurarse de que el mensaje de éxito esté oculto
+    }
+</script>
+
+
+
 
 
 </body>

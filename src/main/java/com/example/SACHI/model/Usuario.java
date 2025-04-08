@@ -1,9 +1,6 @@
 package com.example.SACHI.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity  // Esta anotación indica que esta clase es una entidad JPA, lo que la convierte en una tabla de base de datos
 public class Usuario {
@@ -15,7 +12,9 @@ public class Usuario {
     private String usuario_nombre;
 
     private String usuario_apellido;
+    private String usuario_telefono;
     private String usuario_correo;
+    @Lob
     private String usuario_template;
 
     // Constructor vacío (requerido por JPA)
@@ -23,11 +22,16 @@ public class Usuario {
     }
 
     // Constructor con parámetros para inicializar el usuario fácilmente
-    public Usuario(String nombre,String usuario_apellido, String correo, String template) {
+    public Usuario(String nombre,String usuario_apellido, String usuario_telefono, String correo, String template) {
         this.usuario_nombre = nombre;
         this.usuario_apellido = usuario_apellido;
+        this.usuario_telefono = usuario_telefono;
         this.usuario_correo = correo;
         this.usuario_template = template;
+    }
+
+    public String getUsuario_nombre() {
+        return usuario_nombre;
     }
 
     public Long getId() {
@@ -38,7 +42,7 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getUsuario_nombre() {
+    public String getUsuario_nombre(String txtNombre) {
         return usuario_nombre;
     }
 
@@ -52,6 +56,14 @@ public class Usuario {
 
     public void setUsuario_apellido(String usuario_apellido) {
         this.usuario_apellido = usuario_apellido;
+    }
+
+    public String getUsuario_telefono() {
+        return usuario_telefono;
+    }
+
+    public void setUsuario_telefono(String usuario_telefono) {
+        this.usuario_telefono = usuario_telefono;
     }
 
     public String getUsuario_correo() {
