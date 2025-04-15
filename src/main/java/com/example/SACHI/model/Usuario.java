@@ -2,12 +2,15 @@ package com.example.SACHI.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity  // Esta anotación indica que esta clase es una entidad JPA, lo que la convierte en una tabla de base de datos
 public class Usuario {
 
     @Id  // Esto indica que esta propiedad será la clave primaria de la tabla
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Esto hace que el ID se genere automáticamente al guardar un nuevo usuario
-    private Long id;
+    private Long usuario_id;
 
     private String usuario_nombre;
 
@@ -16,6 +19,10 @@ public class Usuario {
     private String usuario_correo;
     @Lob
     private String usuario_template;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Asistencia> asistencias = new ArrayList<>();
+
 
     // Constructor vacío (requerido por JPA)
     public Usuario() {
@@ -34,12 +41,12 @@ public class Usuario {
         return usuario_nombre;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUsuario_id() {
+        return usuario_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUsuario_id(Long id) {
+        this.usuario_id = id;
     }
 
     public String getUsuario_nombre(String txtNombre) {

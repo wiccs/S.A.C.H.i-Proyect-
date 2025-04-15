@@ -30,7 +30,7 @@ public class R503controller {
         R503 = estado;
 
         // URL del ESP32 (cambia la IP según la que tenga en tu red)
-        String urlESP = "http://192.168.72.205/R503?estado=" + estado;
+        String urlESP = "http://192.168.1.70/R503?estado=" + estado;
 
         // Enviar la petición al ESP32
         RestTemplate restTemplate = new RestTemplate();
