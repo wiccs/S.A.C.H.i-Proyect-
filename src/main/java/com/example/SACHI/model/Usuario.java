@@ -17,7 +17,7 @@ public class Usuario {
     private String usuario_apellido;
     private String usuario_telefono;
     private String usuario_correo;
-    @Lob
+    @Lob //Encabezado para "grandes objetos binarios" (BLOB)
     private String usuario_template;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)

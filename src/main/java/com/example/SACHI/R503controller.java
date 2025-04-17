@@ -14,6 +14,7 @@ import com.example.SACHI.repository.UsuarioRepository;
 public class R503controller {
 
     private static String ultimaPlantillaBase64 = null;
+    private static String idHuella = null;
 
     @Autowired
     private UsuarioRepository usuarioRepository; // Inyectar el repositorio
@@ -40,16 +41,27 @@ public class R503controller {
                 " | Respuesta ESP32: " + respuestaESP;
     }
 
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFingerprint(@RequestBody FingerprintRequest request) {
-        // Aquí procesamos directamente la huella sin servicio
+        // Aquí procesamos directamente la huella y su id
         String base64Template = request.getTemplate();
-        System.out.println("Template recibido (Base64): " + base64Template);
-        ultimaPlantillaBase64 = request.getTemplate(); // ¡Aquí la guardamos!
+        String id = request.getIdFinger();
 
-        // Puedes hacer más cosas aquí si quieres (como validación, guardado, etc.)
+        //Imprimimos en consola para asegurarnos de que lleguen.
+        System.out.println(String.format("""
+                Template recibido: %s
+                Id Recibido: %s
+                """,base64Template,id));
+
+        // la guardamos en una variable global
+        ultimaPlantillaBase64 = request.getTemplate();
+        idHuella = request.getIdFinger();
+
+        // validación, guardado, etc.
         return ResponseEntity.ok("Huella digital recibida correctamente.");
     }
+
 
     @GetMapping("/getTemplate")
     public ResponseEntity<String> getFingerprintTemplate() {
@@ -59,7 +71,7 @@ public class R503controller {
         return ResponseEntity.ok(ultimaPlantillaBase64);
     }
 
-
+    //El controlador que usa el formulario de registro
     @PostMapping("/registrar")
     public ResponseEntity<String> registrarUsuario(@ModelAttribute RegistroAlumnoDTO dto) {
         // Mapear los datos del DTO a la entidad Usuario
