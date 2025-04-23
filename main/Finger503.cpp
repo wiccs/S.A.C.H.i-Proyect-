@@ -1,6 +1,11 @@
+#include "esp32-hal.h"
+#include "WString.h"
 #include "HardwareSerial.h"
 #include "Finger503.h"
 #include <Adafruit_Fingerprint.h>
+#include <Base64.h>
+#include <HTTPClient.h>
+
 
 
 #define RX_PIN 16  // GPIO16 del ESP32 para RX (conectado a TX del sensor)
@@ -15,11 +20,15 @@ Finger503::Finger503() : mySerial(2), finger(&mySerial) {
 void Finger503::iniciar() {
   mySerial.begin(57600, SERIAL_8N1, RX_PIN, TX_PIN);
   finger.begin(57600);
-  Serial.begin(115200);
+  //Serial.begin(115200);//Comentar po si el sensor no se activa despues de la primera vez. 
   Serial.println("Buscando el sensor...");
   
   if (finger.verifyPassword()) {
-    Serial.println("¡Sensor detectado! 🎉");
+     finger.LEDcontrol(FINGERPRINT_LED_BREATHING, 250, FINGERPRINT_LED_PURPLE);
+    Serial.println("¡Sensor detectado :)!");
+    delay(5000);
+    finger.LEDcontrol(FINGERPRINT_LED_OFF, 250, FINGERPRINT_LED_PURPLE);
+     
   } else {
     Serial.println("No se pudo detectar el sensor.");
     while (1); // Si no se detecta el sensor, el programa se detiene
@@ -38,18 +47,27 @@ void Finger503::registrar() {
     Serial.print("Huella registrada con éxito en ID ");
     Serial.println(result);
 
+    downloadFingerprintTemplate(id);
+
     // Mostrar número de huellas almacenadas después del registro
     finger.LEDcontrol(FINGERPRINT_LED_OFF, 250, FINGERPRINT_LED_BLUE);
     Serial.print("Número de huellas almacenadas después de registrar: ");
     Serial.println(finger.templateCount);
+  
+  //String hexTemplate = downloadFingerprintTemplate(1);
+  //Serial.println("Plantilla obtenida:");
+  //Serial.println(hexTemplate);
+
+  //Enviamos el id al servidor para ser alamacenado
 
   } else {
     Serial.println("Falló el registro de huella.");
   }
 
+
   delay(5000);  // Espera antes de registrar otra huella
 }
-
+// Método para autenticar una huella
 uint8_t Finger503::autenticar() {
 
     uint8_t p;
@@ -235,3 +253,208 @@ int Finger503::buscarIDLibre() {
     }
     return -1; // No hay IDs libres
 }
+
+// Métodos auxiliares para huellas
+uint8_t Finger503::downloadFingerprintTemplate(uint16_t id) {
+  Serial.println("------------------------------------");
+  Serial.print("Intentando cargar #"); Serial.println(id);
+  uint8_t p = finger.loadModel(id);
+  switch (p) {
+    case FINGERPRINT_OK:
+      Serial.print("Template "); Serial.print(id); Serial.println(" loaded");
+      break;
+    case FINGERPRINT_PACKETRECIEVEERR:
+      Serial.println("Error de comunicacion");
+      return p;
+    default:
+      Serial.print("Error desconocido "); Serial.println(p);
+      return p;
+  }
+
+  // OK success!
+
+  Serial.print("Intentando obtener #"); Serial.println(id);
+  p = finger.getModel();
+  switch (p) {
+    case FINGERPRINT_OK:
+      Serial.print("Template "); Serial.print(id); Serial.println(" transferring:");
+      break;
+    default:
+      Serial.print("Error desconocido "); Serial.println(p);
+      return p;
+  }
+  //Este primer buffer prepara los datos recibidos por el sensor de forma cruda.
+  //El R503, puede enviar datos en 2 paquetes de 267 bites, 11 de cada uno son "inutiles"
+  uint8_t bytesReceived[534]; // reservamos 2 paquetes de datos de 267 en un buffer..
+  memset(bytesReceived, 0xff, 534); //Luego usamos memeset, para que cada seccion de memoria se llene con 0xff (256, es decir nada.)
+
+  uint32_t starttime = millis(); //Aqui declaramos un tiempo limite por si el sensor se queda colgado.
+  int i = 0;
+  while (i < 534 && (millis() - starttime) < 20000) {
+    if (mySerial.available()) {
+      bytesReceived[i++] = mySerial.read();
+    }
+  }
+  Serial.print(i); Serial.println(" bytes read.");
+  Serial.println("Decoding packet...");
+
+
+// Buffer para almacenar la plantilla real de la huella digital
+  uint8_t fingerTemplate[512]; // the real template
+  memset(fingerTemplate, 0xff, 512);
+
+  // filtering only the data packets
+  int uindx = 9, index = 0;
+  memcpy(fingerTemplate + index, bytesReceived + uindx, 256);   // Se pasan los primeros 256 bites del primer buffer al segundo.
+  uindx += 256;       // skip data
+  uindx += 2;         // skip checksum      //Se hace uso de un filtro para filtrar los 11 que no son utiles.
+  uindx += 9;         // skip next header
+  index += 256;       // advance pointer
+  memcpy(fingerTemplate + index, bytesReceived + uindx, 256);   // segundos 256 bytes
+
+  for (int i = 0; i < 512; ++i) {
+  //Serial.print("0x");
+  printHex(fingerTemplate[i], 2);
+  //Serial.print(", ");
+  }
+  Serial.println("\ndone.");
+  
+  String base64Template = base64::encode(fingerTemplate, sizeof(fingerTemplate)); //Convertimos el arreglo de la plantilla en base64 y lo guardamos en una variable
+  Serial.println("Plantilla lista para ser enviada!");
+  
+  sendTemplate(base64Template,id);
+ // Serial.println(base64Template);
+  
+ 
+
+  return p;
+
+  /*
+    uint8_t templateBuffer[256];
+    memset(templateBuffer, 0xff, 256);  //zero out template buffer
+    int index=0;
+    uint32_t starttime = millis();
+    while ((index < 256) && ((millis() - starttime) < 1000))
+    {
+    if (mySerial.available())
+    {
+      templateBuffer[index] = mySerial.read();
+      index++;
+    }
+    }
+
+    Serial.print(index); Serial.println(" bytes read");
+
+    //dump entire templateBuffer.  This prints out 16 lines of 16 bytes
+    for (int count= 0; count < 16; count++)
+    {
+    for (int i = 0; i < 16; i++)
+    {
+      Serial.print("0x");
+      Serial.print(templateBuffer[count*16+i], HEX);
+      Serial.print(", ");
+    }
+    Serial.println();
+    }*/
+}
+
+// Métodos auxiliares para huellas
+void Finger503::printHex(int num, int precision) {
+  char tmp[16];
+  char format[128];
+
+  sprintf(format, "%%.%dX", precision);
+
+  sprintf(tmp, format, num);
+  Serial.print(tmp);
+}
+
+/*
+//metodo auxiliar para enviar la huella al servidor de springboot:
+void Finger503::sendTemplate(String base64Template) {
+
+  
+    HTTPClient http;
+    
+    const String serverUrl = "http://localhost:8080/R503/upload"; 
+    
+    // Especificamos la URL del servidor
+    http.begin(serverUrl);
+
+    // Establecemos el tipo de contenido como JSON
+    http.addHeader("Content-Type", "application/json");
+    
+    // Creamos el cuerpo de la solicitud con la plantilla Base64
+    String jsonBody = "{\"template\":\"" + base64Template + "\"}";
+
+    // Realizamos la solicitud POST
+    int httpResponseCode = http.POST(jsonBody);
+
+    // Revisamos la respuesta
+    if (httpResponseCode > 0) {
+      Serial.print("Respuesta del servidor: ");
+      Serial.println(httpResponseCode);
+    } else {
+      Serial.print("Error en la solicitud POST: ");
+      Serial.println(httpResponseCode);
+    }
+
+    // Cerramos la conexión
+    http.end();
+  
+}*/
+
+void Finger503::sendTemplate(String base64Template,uint16_t id) {
+  
+    HTTPClient http;
+    
+    //const String serverUrl = "http://localhost:8080/R503/upload";  // URL del servidor
+    //const String serverUrl = "http://192.168.72.144:8080/R503/upload";//celular
+     const String serverUrl = "http://192.168.227.144:8080/R503/upload";
+
+
+    
+    // Inicializamos la conexión
+    http.begin(serverUrl);
+    
+    // Establecemos el tipo de contenido como JSON
+    http.addHeader("Content-Type", "application/json");
+    
+    // Creamos el cuerpo de la solicitud con la plantilla Base64
+    String jsonBody = "{\"template\":\"" + base64Template + "\", \"idFinger\":" + String(id) + "}";
+
+ 
+    
+    // Tiempo de espera en milisegundos (opcional)
+    http.setTimeout(5000);  // 5 segundos
+    
+    // Realizamos la solicitud POST
+    int httpResponseCode = http.POST(jsonBody);
+    
+    // Revisamos la respuesta
+    if (httpResponseCode > 0) {
+        // Si la respuesta es exitosa, mostramos el código de respuesta y el cuerpo del servidor
+        String response = http.getString();
+        Serial.print("Respuesta del servidor: ");
+        Serial.println(httpResponseCode);
+        Serial.print("Cuerpo de la respuesta: ");
+        Serial.println(response);
+    } else {
+        // Si la solicitud falla, mostramos el código de error
+        Serial.print("Error en la solicitud POST: ");
+        Serial.println(httpResponseCode);
+    }
+    
+    // Cerramos la conexión
+    http.end();
+}
+
+
+
+
+
+
+
+
+
+
