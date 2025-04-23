@@ -5,7 +5,15 @@
             <li><a th:href="@{/registro}">Registrar</a></li>
             <li><a th:href="@{/asistencia}">Lista de asistencia</a></li>
             <li><a th:href="@{/estadisticas}">Estadísticas</a></li>
-            <li><a th:href="@{/configuracion}">Configuración</a></li>
+            <li class="config-item">
+                <a th:href="@{/configuracion}">Configuración</a>
+                <ul class="submenu">
+                    <li><a th:href="@{/R503/autenticar}">Activar autenticación </a></li>
+                    <li><a th:href="@{/R503/reiniciar}" >Desactivar autenticación </a></li>
+                </ul>
+            </li>
+
         </ul>
     </nav>
 </div>
+

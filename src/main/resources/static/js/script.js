@@ -92,3 +92,6 @@ document.getElementById("activarSensor").addEventListener("click", function(even
 
 
 
+
+
+

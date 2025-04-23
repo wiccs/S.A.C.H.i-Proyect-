@@ -7,10 +7,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*; //Nos permite usar los encabezados propios de una apirest
 import org.springframework.web.client.RestTemplate;//Esto sirve para hacer peticiones HTTP desde Spring Boot hacia otro servidor
 import com.example.SACHI.repository.UsuarioRepository;
+
+import java.util.HashMap;
+import java.util.Map;
+
 @CrossOrigin(origins = "http://localhost:8080")
 
 @RestController //Indica que el controlador manejara respuestas rest
-@RequestMapping("/R503") //Esta es la ruta(EndPoint) http://localhost:8080/huellas
+@RequestMapping("/R503") //Esta es la ruta(EndPoint)
+
 public class R503controller {
 
     private static String ultimaPlantillaBase64 = null;
@@ -21,17 +26,19 @@ public class R503controller {
 
     private String R503 = "Apagado"; //Esta variable String tiene el estado por defecto del sensor.
 
+    //Este controlador solo sirve para actualizar el estado del sensor prendido o pagado, no interfiere con otras cosas(No eliminar.)
     @GetMapping("/estado")
     public String obtenerEstadoLed() {
         return R503.equalsIgnoreCase("Encendido") ? "Encendido" : "Apagado";
     }
+
 
     @PostMapping("/control")
     public String controlarR503(@RequestParam String estado) {
         R503 = estado;
 
         // URL del ESP32 (cambia la IP según la que tenga en tu red)
-        String urlESP = "http://192.168.1.70/R503?estado=" + estado;
+        String urlESP = "http://192.168.227.205/R503?estado=" + estado; //192.168.227.205 (celular) o (192.168.1.70)
 
         // Enviar la petición al ESP32
         RestTemplate restTemplate = new RestTemplate();
@@ -41,7 +48,7 @@ public class R503controller {
                 " | Respuesta ESP32: " + respuestaESP;
     }
 
-
+    //El controlador que recibe el POST del esp32 (template,id)
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFingerprint(@RequestBody FingerprintRequest request) {
         // Aquí procesamos directamente la huella y su id
@@ -62,16 +69,21 @@ public class R503controller {
         return ResponseEntity.ok("Huella digital recibida correctamente.");
     }
 
-
+    //El controlador que envia datos del sensor al formulario
     @GetMapping("/getTemplate")
-    public ResponseEntity<String> getFingerprintTemplate() {
-        if (ultimaPlantillaBase64 == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Plantilla no encontrada.");
+    public ResponseEntity<Map<String, String>> getFingerprintTemplate() {
+        if (ultimaPlantillaBase64 == null && idHuella == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.ok(ultimaPlantillaBase64);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("template", ultimaPlantillaBase64);
+        response.put("idFinger", idHuella);
+
+        return ResponseEntity.ok(response);
     }
 
-    //El controlador que usa el formulario de registro
+    //El controlador que manda los datos del formulario a DTO.
     @PostMapping("/registrar")
     public ResponseEntity<String> registrarUsuario(@ModelAttribute RegistroAlumnoDTO dto) {
         // Mapear los datos del DTO a la entidad Usuario
@@ -81,7 +93,8 @@ public class R503controller {
                 dto.getTxtApellido(),
                 dto.getTxtTelefono(),
                 dto.getTxtCorreo(),
-                dto.getPlantillaHuella());
+                dto.getPlantillaHuella(),
+                dto.getFingerId());
 
         // Guardar el usuario en la base de datos
         usuarioRepository.save(usuario); // Aquí es donde realmente guardas el usuario
@@ -89,6 +102,31 @@ public class R503controller {
         // Retornar una respuesta exitosa
         return ResponseEntity.ok("Usuario registrado correctamente");
     }
+
+    //Controlador post para activar la autenticacion del ESP32:
+    @GetMapping("/autenticar")
+    public ResponseEntity<String> autenticarConR503()   {
+        String urlESP = "http://192.168.227.205/R503?estado=Autenticando";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String respuestaESP = restTemplate.getForObject(urlESP, String.class);
+
+        return ResponseEntity.ok("Se envió autenticación al ESP32. Respuesta: " + respuestaESP);
+    }
+
+    @GetMapping("/reiniciar")
+    public ResponseEntity<String> reiniciarConR503()   {
+        String urlESP = "http://192.168.227.205/R503?estado=Encendido";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String respuestaESP = restTemplate.getForObject(urlESP, String.class);
+
+        return ResponseEntity.ok("Se envió autenticación al ESP32. Respuesta: " + respuestaESP);
+    }
+
+
+
+
 }
 
 

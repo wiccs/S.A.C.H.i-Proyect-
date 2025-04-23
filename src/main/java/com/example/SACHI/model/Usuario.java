@@ -20,6 +20,8 @@ public class Usuario {
     @Lob //Encabezado para "grandes objetos binarios" (BLOB)
     private String usuario_template;
 
+    private String usuario_fingerId;
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Asistencia> asistencias = new ArrayList<>();
 
@@ -29,12 +31,13 @@ public class Usuario {
     }
 
     // Constructor con parámetros para inicializar el usuario fácilmente
-    public Usuario(String nombre,String usuario_apellido, String usuario_telefono, String correo, String template) {
+    public Usuario(String nombre,String apellido, String telefono, String correo, String template,String fingerId) {
         this.usuario_nombre = nombre;
-        this.usuario_apellido = usuario_apellido;
-        this.usuario_telefono = usuario_telefono;
+        this.usuario_apellido = apellido;
+        this.usuario_telefono = telefono;
         this.usuario_correo = correo;
         this.usuario_template = template;
+        this.usuario_fingerId = fingerId;
     }
 
     public String getUsuario_nombre() {
@@ -87,5 +90,13 @@ public class Usuario {
 
     public void setUsuario_template(String usuario_template) {
         this.usuario_template = usuario_template;
+    }
+
+    public String getUsuario_fingerId() {
+        return usuario_fingerId;
+    }
+
+    public void setUsuario_fingerId(String usuario_fingerId) {
+        this.usuario_fingerId = usuario_fingerId;
     }
 }

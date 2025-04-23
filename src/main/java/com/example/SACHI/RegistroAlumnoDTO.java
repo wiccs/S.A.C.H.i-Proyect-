@@ -7,6 +7,7 @@ public class RegistroAlumnoDTO {
     private String txtTelefono;
     private String txtCorreo;
     private String plantillaHuella;
+    private String fingerId;
 
     public String getTxtNombre() {
         return txtNombre;
@@ -46,5 +47,13 @@ public class RegistroAlumnoDTO {
 
     public void setPlantillaHuella(String plantillaHuella) {
         this.plantillaHuella = plantillaHuella;
+    }
+
+    public String getFingerId() {
+        return fingerId;
+    }
+
+    public void setFingerId(String fingerId) {
+        this.fingerId = fingerId;
     }
 }

@@ -61,11 +61,12 @@
                 <!--  Campo oculto para la huella e id-->
                 <input  type="text" name="plantillaHuella" id="plantillaHuella">
 
-                <input  type="text" name="idHuella" id="idHuella">
+                <input  type="text" name="fingerId" id="fingerId">
 
                 <div id="imagenHuella">
-                    <button onclick="controlarR503('Encendido')" id="activarSensor">Activar sensor</button>
+                    <button type="button" onclick="controlarR503('Registrando')">Activar Registro</button>
                     <button type="button" onclick="obtenerPlantillaHuella()">Obtener plantilla de huella</button>
+
 
                     <div id="spinner" style="display: none;">
                         <div class="spinner"></div>
@@ -102,28 +103,29 @@
 
 <script>
     // Función para obtener el template desde Spring Boot
-    function obtenerPlantillaHuella() {
-        // Hacemos una solicitud GET para obtener la plantilla de huella desde Spring Boot
-        fetch("/R503/getTemplate")
-            .then(response => response.text())  // Recibimos la plantilla de huella en Base64
-            .then(data => {
-                // Colocamos la plantilla en el campo de entrada del formulario
-                document.getElementById("plantillaHuella").value = data;
+ function obtenerPlantillaHuella() {
+     // Mostrar el spinner mientras se espera la respuesta
+     document.getElementById("spinner").style.display = "flex";
+     document.getElementById("successCheck").style.display = "none";
 
-                // Mostrar mensaje de éxito o hacer alguna acción adicional
-                document.getElementById("spinner").style.display = "none";  // Ocultar el spinner
-                document.getElementById("successCheck").style.display = "block";  // Mostrar el mensaje de éxito
-            })
-            .catch(error => {
-                console.error("Error al obtener la huella:", error);
-                alert("Hubo un problema al obtener la huella.");
-                document.getElementById("spinner").style.display = "none";  // Ocultar el spinner en caso de error
-            });
+     // Hacemos una solicitud GET para obtener la plantilla de huella desde Spring Boot
+     fetch("/R503/getTemplate")
+         .then(res => res.json())
+         .then(data => {
+             document.getElementById("plantillaHuella").value = data.template;
+             document.getElementById("fingerId").value = data.idFinger;
 
-        // Mostrar el spinner mientras se espera la respuesta
-        document.getElementById("spinner").style.display = "flex";
-        document.getElementById("successCheck").style.display = "none";  // Asegurarse de que el mensaje de éxito esté oculto
-    }
+             // Mostrar mensaje de éxito o hacer alguna acción adicional
+             document.getElementById("spinner").style.display = "none";  // Ocultar el spinner
+             document.getElementById("successCheck").style.display = "block";  // Mostrar mensaje de éxito
+         })
+         .catch(error => {
+             console.error("Error al obtener la huella:", error);
+             alert("Hubo un problema al obtener la huella.");
+             document.getElementById("spinner").style.display = "none";  // Ocultar spinner en caso de error
+         });
+ }
+
 </script>
 
 
