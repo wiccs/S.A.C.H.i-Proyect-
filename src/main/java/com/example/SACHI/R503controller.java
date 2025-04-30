@@ -1,5 +1,7 @@
 package com.example.SACHI;
+import com.example.SACHI.model.Asistencia;
 import com.example.SACHI.model.Usuario;
+import com.example.SACHI.repository.AsistenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +10,10 @@ import org.springframework.web.bind.annotation.*; //Nos permite usar los encabez
 import org.springframework.web.client.RestTemplate;//Esto sirve para hacer peticiones HTTP desde Spring Boot hacia otro servidor
 import com.example.SACHI.repository.UsuarioRepository;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8080")
 
@@ -20,9 +24,14 @@ public class R503controller {
 
     private static String ultimaPlantillaBase64 = null;
     private static String idHuella = null;
+    private static String idAutent = null;
 
     @Autowired
     private UsuarioRepository usuarioRepository; // Inyectar el repositorio
+
+    @Autowired
+    private AsistenciaRepository asistenciaRepository;// Inyectar el repositorio
+
 
     private String R503 = "Apagado"; //Esta variable String tiene el estado por defecto del sensor.
 
@@ -68,6 +77,30 @@ public class R503controller {
         // validación, guardado, etc.
         return ResponseEntity.ok("Huella digital recibida correctamente.");
     }
+
+    //El controlador que recibe otro POST del esp32 (template,id) :V
+    @PostMapping("/uploadAutent")
+    public ResponseEntity<String> uploadFingerprint(@RequestBody AutentRequest request) {
+        // Aquí procesamos directamente el id
+        String id = request.getId_autent();
+
+        //Imprimimos en consola para asegurarnos de que lleguen.
+        System.out.println(String.format("""
+                Id recibido: %s
+                """,id));
+
+        // la guardamos en una variable global
+        idAutent = request.getId_autent();
+
+        registrarAsistencia(idAutent);
+
+
+        // validación, guardado, etc.
+        return ResponseEntity.ok("Autenticacion exitosa!");
+    }
+
+
+
 
     //El controlador que envia datos del sensor al formulario
     @GetMapping("/getTemplate")
@@ -122,6 +155,26 @@ public class R503controller {
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
 
         return ResponseEntity.ok("Se envió autenticación al ESP32. Respuesta: " + respuestaESP);
+    }
+
+    //Metodos Auxiliares:
+    public void registrarAsistencia(String idAutent) {
+        Long idUsuario = Long.valueOf(idAutent); // convertir si viene como texto
+
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(idUsuario);
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+
+            Asistencia nuevaAsistencia = new Asistencia();
+            nuevaAsistencia.setAsistencia_fecha(LocalDate.now()); // fecha actual
+            nuevaAsistencia.setAsistencia_valor(true); // por defecto no asistió
+            nuevaAsistencia.setUsuario(usuario); // relación
+
+            asistenciaRepository.save(nuevaAsistencia);
+            System.out.println("Asistencia guardada.");
+        } else {
+            System.out.println("Usuario no encontrado con ID: " + idUsuario);
+        }
     }
 
 
