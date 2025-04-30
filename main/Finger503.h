@@ -13,6 +13,9 @@ class Finger503 {
     int registerFingerprint(int id); //Una funcion auxiliar.
     int getFingerprintIDez();//Otra funcion Auxiliar
     int buscarIDLibre();//Otra funcion auxiliar.
+    uint8_t downloadFingerprintTemplate(uint16_t id); //Funcion auxiliar para obtener templates
+    void printHex(int num, int precision); //Otra funcion auxiliar
+    void sendTemplate(String base64Template,uint16_t id);//Funcion auxiliar para hacer Post
 
 public:
     // Constructor
