@@ -12,6 +12,7 @@ import com.example.SACHI.repository.UsuarioRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -177,7 +178,8 @@ public class R503controller {
             Usuario usuario = usuarioOptional.get();
 
             Asistencia nuevaAsistencia = new Asistencia();
-            nuevaAsistencia.setAsistencia_fecha(LocalDateTime.now()); // fecha actual
+            nuevaAsistencia.setAsistencia_fecha(LocalDate.now()); // fecha actual
+            nuevaAsistencia.setAsistencia_hora(LocalTime.now());//Hora actual
             nuevaAsistencia.setAsistencia_valor(true); // por defecto no asistió
             nuevaAsistencia.setUsuario(usuario); // relación
 
@@ -187,6 +189,7 @@ public class R503controller {
             System.out.println("Usuario no encontrado con ID: " + idUsuario);
         }
     }
+
 
 
 

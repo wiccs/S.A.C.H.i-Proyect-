@@ -3,13 +3,15 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity //Indicamos que sera una tabla
 public class Asistencia {
     @Id  // Esto indica que esta propiedad será la clave primaria de la tabla
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Esto hace que el ID se genere automáticamente al guardar un nuevo usuario
     private Long asistencia_id;
-    private LocalDateTime asistencia_fecha;
+    private LocalDate asistencia_fecha;
+    private LocalTime asistencia_hora;
 
     private boolean asistencia_valor; // true = asistió, false = no asistió
 
@@ -25,15 +27,23 @@ public class Asistencia {
         this.asistencia_id = asistencia_id;
     }
 
-    public LocalDateTime getAsistencia_fecha() {
+    public LocalDate getAsistencia_fecha() {
         return asistencia_fecha;
     }
 
-    public void setAsistencia_fecha(LocalDateTime asistencia_fecha) {
+    public void setAsistencia_fecha(LocalDate asistencia_fecha) {
         this.asistencia_fecha = asistencia_fecha;
     }
 
-    public boolean isAsistencia_valor() {
+    public LocalTime getAsistencia_hora() {
+        return asistencia_hora;
+    }
+
+    public void setAsistencia_hora(LocalTime asistencia_hora) {
+        this.asistencia_hora = asistencia_hora;
+    }
+
+    public boolean getAsistencia_valor() {
         return asistencia_valor;
     }
 
