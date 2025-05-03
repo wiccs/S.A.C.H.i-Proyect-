@@ -2,13 +2,14 @@ package com.example.SACHI.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity //Indicamos que sera una tabla
 public class Asistencia {
     @Id  // Esto indica que esta propiedad será la clave primaria de la tabla
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Esto hace que el ID se genere automáticamente al guardar un nuevo usuario
     private Long asistencia_id;
-    private LocalDate asistencia_fecha;
+    private LocalDateTime asistencia_fecha;
 
     private boolean asistencia_valor; // true = asistió, false = no asistió
 
@@ -24,11 +25,11 @@ public class Asistencia {
         this.asistencia_id = asistencia_id;
     }
 
-    public LocalDate getAsistencia_fecha() {
+    public LocalDateTime getAsistencia_fecha() {
         return asistencia_fecha;
     }
 
-    public void setAsistencia_fecha(LocalDate asistencia_fecha) {
+    public void setAsistencia_fecha(LocalDateTime asistencia_fecha) {
         this.asistencia_fecha = asistencia_fecha;
     }
 

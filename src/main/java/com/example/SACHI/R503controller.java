@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;//Esto sirve para hacer petic
 import com.example.SACHI.repository.UsuarioRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -147,6 +148,16 @@ public class R503controller {
         return ResponseEntity.ok("Se envió autenticación al ESP32. Respuesta: " + respuestaESP);
     }
 
+    @GetMapping("/formatear")
+    public ResponseEntity<String> formatear()   {
+        String urlESP = "http://192.168.227.205/R503?estado=Formateando";
+
+        RestTemplate restTemplate = new RestTemplate();
+        String respuestaESP = restTemplate.getForObject(urlESP, String.class);
+
+        return ResponseEntity.ok("Se envió Formateando al ESP32. Respuesta: " + respuestaESP);
+    }
+
     @GetMapping("/reiniciar")
     public ResponseEntity<String> reiniciarConR503()   {
         String urlESP = "http://192.168.227.205/R503?estado=Encendido";
@@ -166,7 +177,7 @@ public class R503controller {
             Usuario usuario = usuarioOptional.get();
 
             Asistencia nuevaAsistencia = new Asistencia();
-            nuevaAsistencia.setAsistencia_fecha(LocalDate.now()); // fecha actual
+            nuevaAsistencia.setAsistencia_fecha(LocalDateTime.now()); // fecha actual
             nuevaAsistencia.setAsistencia_valor(true); // por defecto no asistió
             nuevaAsistencia.setUsuario(usuario); // relación
 
