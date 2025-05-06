@@ -15,7 +15,9 @@ class Finger503 {
     int buscarIDLibre();//Otra funcion auxiliar.
     uint8_t downloadFingerprintTemplate(uint16_t id); //Funcion auxiliar para obtener templates
     void printHex(int num, int precision); //Otra funcion auxiliar
-    void sendTemplate(String base64Template,uint16_t id);//Funcion auxiliar para hacer Post
+    void sendTemplate(String base64Template,uint16_t id);//Funcion auxiliar para hacer Post con los datos del sensor a spring
+    void sendAutenticationId(uint16_t id); //Funcion que envia el id autenticado a spring Post.
+
 
 public:
     // Constructor
@@ -27,5 +29,6 @@ public:
     uint8_t autenticar();  // Verifica una huella.
     bool contar(); // Mostrar numero de huellas registradas.
     bool eliminar(); // Eliminar el registro.
+    void formatearBd(); //Eliminar los registros de la BD de R503
     
 };

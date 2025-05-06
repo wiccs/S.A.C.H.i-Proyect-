@@ -70,7 +70,7 @@ void loop() {
 }
 
 
-//Funcion que activa el sensor R503.
+//Funcion que activa los estados del R503.
 void activarSensor() {
    String estado = server.arg("estado");
     if (estado == "Encendido") {
@@ -89,13 +89,20 @@ void activarSensor() {
           Serial.println("Activando la funcion de registro...");
           finger.autenticar();
           server.send(200,"text/plain","Autenticacion Finalizada!");
-    }
-    else{
+    }else{
+      if(estado == "Formateando"){
+        Serial.println("Activando la funcion de formateo");
+          finger.formatearBd();
+          server.send(200,"text/plain","Formateo Finalizado!");
+      }else{
       server.send(200, "text/plain", "Error, algo anda mal...");
     }
     }
     }
     }
+    }
+    
+    
     
 
 
