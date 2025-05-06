@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8080")
 
-@RestController //Indica que el controlador manejara respuestas rest
+@RestController //Indica que el controlador manejara respuestas REST (JSON )
 @RequestMapping("/R503") //Esta es la ruta(EndPoint)
 
 public class R503controller {
@@ -178,9 +178,9 @@ public class R503controller {
             Usuario usuario = usuarioOptional.get();
 
             Asistencia nuevaAsistencia = new Asistencia();
-            nuevaAsistencia.setAsistencia_fecha(LocalDate.now()); // fecha actual
-            nuevaAsistencia.setAsistencia_hora(LocalTime.now());//Hora actual
-            nuevaAsistencia.setAsistencia_valor(true); // por defecto no asistió
+            nuevaAsistencia.setAsistenciaFecha(LocalDate.now()); // fecha actual
+            nuevaAsistencia.setAsistenciaHora(LocalTime.now());//Hora actual
+            nuevaAsistencia.setAsistenciaValor(true); // por defecto no asistió
             nuevaAsistencia.setUsuario(usuario); // relación
 
             asistenciaRepository.save(nuevaAsistencia);

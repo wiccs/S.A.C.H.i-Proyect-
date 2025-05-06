@@ -27,7 +27,7 @@ header{
 #contenedor {
 
     display: flex; /* Esto hace que los hijos se alineen en fila, no usamos inline por que no respeta el ancho no alto. */
-
+    justify-content: space-between; /* Espacio entre los elementos */
 }
 
 
@@ -243,6 +243,45 @@ footer {
 .submenu li a:hover {
     background-color: #8a9ea871;
 }
+
+
+/*---------------Estilos de tabla de asistencias registradas*/
+        h1{
+        text-align:center;
+        }
+
+        table {
+               margin: 0 auto; /* Centra la tabla en la página */
+               text-align: center;
+               font-size: 20px;
+               color: #000000;
+               margin-top: 20px;
+               padding: 10px;
+               border-radius: 10px;
+               box-shadow: 0px 0px 15px rgba(1, 5, 31, 0.304); /* Efecto de sombra*/
+               transition: 0.3s ease-in-out;
+               width: 100%;
+               border-collapse: collapse;
+               margin-top: 1rem;
+        }
+        table tr {
+            height: 24px; /* o 20px si quieres más compacto */
+        }
+
+
+        th, td {
+            border: 1px solid #ccc;
+            text-align: left;
+            padding: 4px 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #333;
+        }
 
 
 

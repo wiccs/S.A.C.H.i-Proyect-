@@ -10,10 +10,12 @@ public class Asistencia {
     @Id  // Esto indica que esta propiedad será la clave primaria de la tabla
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Esto hace que el ID se genere automáticamente al guardar un nuevo usuario
     private Long asistencia_id;
-    private LocalDate asistencia_fecha;
-    private LocalTime asistencia_hora;
-
-    private boolean asistencia_valor; // true = asistió, false = no asistió
+    @Column(name = "asistencia_fecha")
+    private LocalDate asistenciaFecha;
+    @Column(name = "asistencia_hora")
+    private LocalTime asistenciaHora;
+    @Column(name = "asistencia_valor")
+    private boolean asistenciaValor; // true = asistió, false = no asistió
 
     @ManyToOne
     @JoinColumn(name = "usuario_id") // Esta es la forma en JPA de hacer foreign key, el campo se llama: usuario_id
@@ -27,28 +29,28 @@ public class Asistencia {
         this.asistencia_id = asistencia_id;
     }
 
-    public LocalDate getAsistencia_fecha() {
-        return asistencia_fecha;
+    public LocalDate getAsistenciaFecha() {
+        return asistenciaFecha;
     }
 
-    public void setAsistencia_fecha(LocalDate asistencia_fecha) {
-        this.asistencia_fecha = asistencia_fecha;
+    public void setAsistenciaFecha(LocalDate asistenciaFecha) {
+        this.asistenciaFecha = asistenciaFecha;
     }
 
-    public LocalTime getAsistencia_hora() {
-        return asistencia_hora;
+    public LocalTime getAsistenciaHora() {
+        return asistenciaHora;
     }
 
-    public void setAsistencia_hora(LocalTime asistencia_hora) {
-        this.asistencia_hora = asistencia_hora;
+    public void setAsistenciaHora(LocalTime asistenciaHora) {
+        this.asistenciaHora = asistenciaHora;
     }
 
-    public boolean getAsistencia_valor() {
-        return asistencia_valor;
+    public boolean isAsistenciaValor() {
+        return asistenciaValor;
     }
 
-    public void setAsistencia_valor(boolean asistencia_valor) {
-        this.asistencia_valor = asistencia_valor;
+    public void setAsistenciaValor(boolean asistenciaValor) {
+        this.asistenciaValor = asistenciaValor;
     }
 
     public Usuario getUsuario() {

@@ -52,9 +52,6 @@ public class Usuario {
         this.usuario_id = id;
     }
 
-    public String getUsuario_nombre(String txtNombre) {
-        return usuario_nombre;
-    }
 
     public void setUsuario_nombre(String usuario_nombre) {
         this.usuario_nombre = usuario_nombre;
