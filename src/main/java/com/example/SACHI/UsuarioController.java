@@ -16,23 +16,43 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller // Este encabezado es util para vistas HMTL en modelo mvc
+
+//Nuestra ruta principal:
 @RequestMapping("/usuarios")
 public class UsuarioController {
+
+    //Inyectamos Nuestro repositorio:
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+
+    //Este controlaodr se encarga de mostrar los registros, de la paginacion y la busqueda.
     @GetMapping("/all")
-    public String listarUsuarios(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "5") int size,
-                                 Model model) {
+    public String listarUsuarios(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String query,
+            Model model) {
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<Usuario> paginaUsuarios = usuarioRepository.findAll(pageable);
+
+        Page<Usuario> paginaUsuarios;
+
+        if (query != null && !query.isEmpty()) {
+            paginaUsuarios = usuarioRepository.findByUsuarioNombreContaining(query, pageable);
+            // Ejemplo: método que filtra por nombre con paginación
+        } else {
+            paginaUsuarios = usuarioRepository.findAll(pageable);
+        }
 
         model.addAttribute("usuarios", paginaUsuarios.getContent());
         model.addAttribute("totalPages", paginaUsuarios.getTotalPages());
         model.addAttribute("currentPage", page);
+        model.addAttribute("query", query);
 
-        return "listarUsuarios"; // tu archivo usuarios.html
+        return "listarUsuarios";
     }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.example.SACHI;
 import com.example.SACHI.model.Asistencia;
 import com.example.SACHI.model.Usuario;
 import com.example.SACHI.repository.AsistenciaRepository;
+import com.example.SACHI.service.R503service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,9 @@ public class R503controller {
     @Autowired
     private AsistenciaRepository asistenciaRepository;// Inyectar el repositorio
 
+    @Autowired
+    private R503service sensorService; //Inyectamos el service.
+
 
     private String R503 = "Apagado"; //Esta variable String tiene el estado por defecto del sensor.
 
@@ -49,7 +53,7 @@ public class R503controller {
         R503 = estado;
 
         // URL del ESP32 (cambia la IP según la que tenga en tu red)
-        String urlESP = "http://192.168.227.205/R503?estado=" + estado; //192.168.227.205 (celular) o (192.168.1.70)
+        String urlESP = "http://192.168.42.205/R503?estado=" + estado; //192.168.227.205 (celular) o (192.168.1.70)
 
         // Enviar la petición al ESP32
         RestTemplate restTemplate = new RestTemplate();
@@ -141,7 +145,7 @@ public class R503controller {
     //Controlador post para activar la autenticacion del ESP32:
     @GetMapping("/autenticar")
     public ResponseEntity<String> autenticarConR503()   {
-        String urlESP = "http://192.168.227.205/R503?estado=Autenticando";
+        String urlESP = "http://192.168.42.205/R503?estado=Autenticando";
 
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
@@ -149,9 +153,15 @@ public class R503controller {
         return ResponseEntity.ok("Se envió autenticación al ESP32. Respuesta: " + respuestaESP);
     }
 
+    @GetMapping("/autoAutenticar")
+    public ResponseEntity<String> autenticarConR503auto() {
+        String respuesta = sensorService.autenticarConR503auto();
+        return ResponseEntity.ok(respuesta);
+    }
+
     @GetMapping("/formatear")
     public ResponseEntity<String> formatear()   {
-        String urlESP = "http://192.168.227.205/R503?estado=Formateando";
+        String urlESP = "http://192.168.42.205/R503?estado=Formateando";
 
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
@@ -161,7 +171,7 @@ public class R503controller {
 
     @GetMapping("/reiniciar")
     public ResponseEntity<String> reiniciarConR503()   {
-        String urlESP = "http://192.168.227.205/R503?estado=Encendido";
+        String urlESP = "http://192.168.42.205/R503?estado=Encendido";
 
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);

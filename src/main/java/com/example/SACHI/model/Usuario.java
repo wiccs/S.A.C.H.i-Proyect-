@@ -12,15 +12,23 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Esto hace que el ID se genere automáticamente al guardar un nuevo usuario
     private Long usuario_id;
 
-    private String usuario_nombre;
+    @Column(name = "usuario_nombre")
+    private String usuarioNombre;
 
-    private String usuario_apellido;
-    private String usuario_telefono;
-    private String usuario_correo;
+    @Column(name = "usuario_apellido")
+    private String usuarioApellido;
+
+    @Column(name = "usuario_telefono")
+    private String usuarioTelefono;
+    @Column(name = "usuario_correo")
+    private String usuarioCorreo;
+
+    @Column(name = "usuario_template")
     @Lob //Encabezado para "grandes objetos binarios" (BLOB)
-    private String usuario_template;
+    private String usuarioTemplate;
 
-    private String usuario_fingerId;
+    @Column(name = "usuario_fingerId")
+    private String usuarioFingerId;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Asistencia> asistencias = new ArrayList<>();
@@ -32,16 +40,16 @@ public class Usuario {
 
     // Constructor con parámetros para inicializar el usuario fácilmente
     public Usuario(String nombre,String apellido, String telefono, String correo, String template,String fingerId) {
-        this.usuario_nombre = nombre;
-        this.usuario_apellido = apellido;
-        this.usuario_telefono = telefono;
-        this.usuario_correo = correo;
-        this.usuario_template = template;
-        this.usuario_fingerId = fingerId;
+        this.usuarioNombre = nombre;
+        this.usuarioApellido = apellido;
+        this.usuarioTelefono = telefono;
+        this.usuarioCorreo = correo;
+        this.usuarioTemplate = template;
+        this.usuarioFingerId = fingerId;
     }
 
-    public String getUsuario_nombre() {
-        return usuario_nombre;
+    public String getUsuarioNombre() {
+        return usuarioNombre;
     }
 
     public Long getUsuario_id() {
@@ -53,47 +61,47 @@ public class Usuario {
     }
 
 
-    public void setUsuario_nombre(String usuario_nombre) {
-        this.usuario_nombre = usuario_nombre;
+    public void setUsuarioNombre(String usuarioNombre) {
+        this.usuarioNombre = usuarioNombre;
     }
 
-    public String getUsuario_apellido() {
-        return usuario_apellido;
+    public String getUsuarioApellido() {
+        return usuarioApellido;
     }
 
-    public void setUsuario_apellido(String usuario_apellido) {
-        this.usuario_apellido = usuario_apellido;
+    public void setUsuarioApellido(String usuarioApellido) {
+        this.usuarioApellido = usuarioApellido;
     }
 
-    public String getUsuario_telefono() {
-        return usuario_telefono;
+    public String getUsuarioTelefono() {
+        return usuarioTelefono;
     }
 
-    public void setUsuario_telefono(String usuario_telefono) {
-        this.usuario_telefono = usuario_telefono;
+    public void setUsuarioTelefono(String usuarioTelefono) {
+        this.usuarioTelefono = usuarioTelefono;
     }
 
-    public String getUsuario_correo() {
-        return usuario_correo;
+    public String getUsuarioCorreo() {
+        return usuarioCorreo;
     }
 
-    public void setUsuario_correo(String usuario_correo) {
-        this.usuario_correo = usuario_correo;
+    public void setUsuarioCorreo(String usuarioCorreo) {
+        this.usuarioCorreo = usuarioCorreo;
     }
 
-    public String getUsuario_template() {
-        return usuario_template;
+    public String getUsuarioTemplate() {
+        return usuarioTemplate;
     }
 
-    public void setUsuario_template(String usuario_template) {
-        this.usuario_template = usuario_template;
+    public void setUsuarioTemplate(String usuarioTemplate) {
+        this.usuarioTemplate = usuarioTemplate;
     }
 
-    public String getUsuario_fingerId() {
-        return usuario_fingerId;
+    public String getUsuarioFingerId() {
+        return usuarioFingerId;
     }
 
-    public void setUsuario_fingerId(String usuario_fingerId) {
-        this.usuario_fingerId = usuario_fingerId;
+    public void setUsuarioFingerId(String usuarioFingerId) {
+        this.usuarioFingerId = usuarioFingerId;
     }
 }

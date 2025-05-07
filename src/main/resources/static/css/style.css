@@ -286,5 +286,78 @@ footer {
 
 
 
+/* Estilo para los botones de acción */
+
+#paginacion{
+    display: flex;
+    justify-content: center; /* Centra los botones de paginación */
+    margin-top: 20px;
+
+
+}
+#paginacion, span{
+    font-size: 7px;
+}
+#controladorPage{
+    background-color: rgba(16, 40, 63, 0.141);
+    border-radius: 5px;
+    margin: 5px;
+    text-align: center;
+    font-size: 10px;
+    color: rgb(1, 7, 22);
+
+    margin-left: 25%;
+    margin-right: 25%;
+
+    padding: 9px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(1, 5, 31, 0.304); /* Efecto de brillo */
+    transition: 0.3s ease-in-out;
+}
+
+#buscador{
+    background-color: rgba(16, 40, 63, 0.141);
+    border-radius: 5px;
+    margin: 5px;
+    text-align: center;
+    font-size: 10px;
+    color: rgb(1, 7, 22);
+
+
+
+    padding: 9px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(1, 5, 31, 0.304); /* Efecto de brillo */
+    transition: 0.3s ease-in-out;
+}
+
+#buscador input[type="text"] {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px rgba(1, 5, 31, 0.304); /* Efecto de brillo */
+    transition: 0.3s ease-in-out;
+}
+
+#buscador,button{
+margin: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -8,11 +8,28 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<body>
 
 <div th:replace="fragments/header :: header"></div>
 
+<div id="buscador">
+<form method="get" action="/usuarios/all">
+    <input type="text" name="query" th:value="${query}">
+    <button type="submit">Buscar</button>
+</form>
+</div>
+
+
 <h1>Usuarios Registrados</h1>
+
+<div id="paginacion">
+    <a id="controladorPage" th:if="${currentPage > 0}"
+       th:href="@{/usuarios/all(page=${currentPage - 1}, size=5, query=${query})}">Anterior</a>
+
+    <span>Página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+
+    <a id="controladorPage" th:if="${currentPage + 1 < totalPages}"
+       th:href="@{/usuarios/all(page=${currentPage + 1}, size=5, query=${query})}">Siguiente</a>
+</div>
 
 <div id="contenedor">
     <div th:replace="fragments/sidebar :: sidebar"></div>
@@ -31,30 +48,17 @@
         <tbody>
         <tr th:each="usuario : ${usuarios}">
             <td th:text="${usuario.usuario_id}">1</td>
-            <td th:text="${usuario.usuario_nombre}">Nombre</td>
-            <td th:text="${usuario.usuario_apellido}">Apellido</td>
-            <td th:text="${usuario.usuario_telefono}">2025-04-28</td>
-            <td th:text="${usuario.usuario_correo}">08:15</td>
+            <td th:text="${usuario.usuarioNombre}">Nombre</td>
+            <td th:text="${usuario.usuarioApellido}">Apellido</td>
+            <td th:text="${usuario.usuarioTelefono}">2025-04-28</td>
+            <td th:text="${usuario.usuarioCorreo}">08:15</td>
         </tr>
         </tbody>
     </table>
 
-    <div>
-        <a th:if="${currentPage > 0}"
-           th:href="@{/usuarios/all(page=${currentPage - 1}, size=5)}">Anterior</a>
-
-        <span>Página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
-
-        <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{/usuarios/all(page=${currentPage + 1}, size=5)}">Siguiente</a>
-    </div>
-
-
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
-
-</body>
 
 </body>
 </html>

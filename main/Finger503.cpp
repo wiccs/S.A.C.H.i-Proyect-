@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "esp32-hal.h"
 #include "WString.h"
 #include "HardwareSerial.h"
@@ -10,6 +11,8 @@
 
 #define RX_PIN 16  // GPIO16 del ESP32 para RX (conectado a TX del sensor)
 #define TX_PIN 17  // GPIO17 del ESP32 para TX (conectado a RX del sensor)
+
+//--------------------------------------------------------- Metodos Principales ----------------------------------------------------------------------
 
 // Constructor de la clase Finger503
 Finger503::Finger503() : mySerial(2), finger(&mySerial) {
@@ -145,14 +148,52 @@ uint8_t Finger503::autenticar() {
 
   // found a match!
   Serial.print("ID Encontrado en: "); Serial.print(finger.fingerID);
+
+  uint16_t idAutent = finger.fingerID;
+
+  sendAutenticationId(idAutent);
+
   Serial.print("Con confianza de: "); Serial.println(finger.confidence);
+
+  
 
   return finger.fingerID;
 }
 
+void Finger503::formatearBd(){
+  
+Serial.println("\n\nDeleting all fingerprint templates!");
+  //Serial.println("Press 'Y' key to continue");
+
+ // while (1) {
+  //  if (Serial.available() && (Serial.read() == 'Y')) {
+   //   break;
+   // }
+ // }
+
+  // set the data rate for the sensor serial port
+  //finger.begin(57600);
+
+  if (finger.verifyPassword()) {
+    Serial.println("Found fingerprint sensor!");
+  } else {
+    Serial.println("Did not find fingerprint sensor :(");
+    while (1);
+  }
+
+  finger.emptyDatabase();
+
+  Serial.println("Now database is empty :)");
+}
 
 
-// Métodos auxiliares para huellas
+
+
+
+
+
+
+// ------------------------------------------------Métodos auxiliares para huellas-----------------------------------------------------------
 int Finger503::registerFingerprint(int id) {
   Serial.print("Coloca el dedo para registrar en ID ");
   finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_BLUE);
@@ -425,6 +466,50 @@ void Finger503::sendTemplate(String base64Template,uint16_t id) {
 
  
     
+    // Tiempo de espera en milisegundos (opcional)
+    http.setTimeout(5000);  // 5 segundos
+    
+    // Realizamos la solicitud POST
+    int httpResponseCode = http.POST(jsonBody);
+    
+    // Revisamos la respuesta
+    if (httpResponseCode > 0) {
+        // Si la respuesta es exitosa, mostramos el código de respuesta y el cuerpo del servidor
+        String response = http.getString();
+        Serial.print("Respuesta del servidor: ");
+        Serial.println(httpResponseCode);
+        Serial.print("Cuerpo de la respuesta: ");
+        Serial.println(response);
+    } else {
+        // Si la solicitud falla, mostramos el código de error
+        Serial.print("Error en la solicitud POST: ");
+        Serial.println(httpResponseCode);
+    }
+    
+    // Cerramos la conexión
+    http.end();
+}
+
+void Finger503::sendAutenticationId(uint16_t id) {
+  
+    HTTPClient http;
+    
+    //const String serverUrl = "http://localhost:8080/R503/upload";  // URL del servidor
+    //const String serverUrl = "http://192.168.72.144:8080/R503/upload";//celular
+     const String serverUrl = "http://192.168.227.144:8080/R503/uploadAutent";//
+
+
+    
+    // Inicializamos la conexión
+    http.begin(serverUrl);
+    
+    // Establecemos el tipo de contenido como JSON
+    http.addHeader("Content-Type", "application/json");
+    
+    // Creamos el cuerpo de la solicitud con la plantilla Base64
+    String jsonBody = "{\"id_autent\":" + String(id) + "}";
+
+ 
     // Tiempo de espera en milisegundos (opcional)
     http.setTimeout(5000);  // 5 segundos
     

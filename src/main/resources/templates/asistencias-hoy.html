@@ -34,8 +34,8 @@
         <tbody>
         <tr th:each="asistencia : ${asistencias}">
             <td th:text="${asistencia.asistencia_id}">1</td>
-            <td th:text="${asistencia.usuario.usuario_nombre}">Nombre</td>
-            <td th:text="${asistencia.usuario.usuario_apellido}">Apellido</td>
+            <td th:text="${asistencia.usuario.usuarioNombre}">Nombre</td>
+            <td th:text="${asistencia.usuario.usuarioApellido}">Apellido</td>
             <td th:text="${asistencia.asistenciaFecha}">2025-04-28</td>
             <td th:text="${asistencia.asistenciaHora}">08:15</td>
             <td th:text="${asistencia.asistenciaValor ? 'Sí' : 'No'}">Sí</td>

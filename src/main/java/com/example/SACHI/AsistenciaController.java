@@ -14,7 +14,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller // Este encabezado es util para vistas HMTL en modelo mvc
-@RequestMapping("/asistencia")
+
+@RequestMapping("/asistencia") //Nuestra ruta.
 public class AsistenciaController {
 
     //Inyectamos el repositorio con autowired:)
@@ -24,7 +25,9 @@ public class AsistenciaController {
     @GetMapping("/hoy")
     public String verAsistenciasHoy(Model model) {
         LocalDate hoy = LocalDate.now();
+
         List<Asistencia> asistenciasHoy = asistenciaRepository.findByAsistenciaFecha(hoy);
+
         model.addAttribute("asistencias", asistenciasHoy);
         return "asistencias-hoy"; // apunta a src/main/resources/templates/asistencias-hoy.html
     }

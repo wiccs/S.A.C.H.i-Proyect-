@@ -7,6 +7,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface AsistenciaRepository extends JpaRepository<Asistencia, Long> {
-    List<Asistencia> findByAsistenciaFecha(LocalDate asistencia_fecha);
+
+    //Aqui creamos una lista que contendra los registros de fecha, recibe como parametro los registro que queremos que se
+    //almacenen en la lista.
+    List <Asistencia> findByAsistenciaFecha (LocalDate asistencia_fecha);
+
 
 }
