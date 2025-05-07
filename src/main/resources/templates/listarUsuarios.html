@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACHI PROYECT!</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<h1>Usuarios Registrados</h1>
+
+<div id="contenedor">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Telefono</th>
+            <th>Correo</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="usuario : ${usuarios}">
+            <td th:text="${usuario.usuario_id}">1</td>
+            <td th:text="${usuario.usuario_nombre}">Nombre</td>
+            <td th:text="${usuario.usuario_apellido}">Apellido</td>
+            <td th:text="${usuario.usuario_telefono}">2025-04-28</td>
+            <td th:text="${usuario.usuario_correo}">08:15</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/usuarios/all(page=${currentPage - 1}, size=5)}">Anterior</a>
+
+        <span>Página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/usuarios/all(page=${currentPage + 1}, size=5)}">Siguiente</a>
+    </div>
+
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</body>
+</html>

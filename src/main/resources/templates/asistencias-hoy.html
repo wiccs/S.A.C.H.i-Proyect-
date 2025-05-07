@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACHI PROYECT!</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<h1>Asistencias del día de hoy</h1>
+
+<div id="contenedor">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>¿Asistió?</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="asistencia : ${asistencias}">
+            <td th:text="${asistencia.asistencia_id}">1</td>
+            <td th:text="${asistencia.usuario.usuario_nombre}">Nombre</td>
+            <td th:text="${asistencia.usuario.usuario_apellido}">Apellido</td>
+            <td th:text="${asistencia.asistenciaFecha}">2025-04-28</td>
+            <td th:text="${asistencia.asistenciaHora}">08:15</td>
+            <td th:text="${asistencia.asistenciaValor ? 'Sí' : 'No'}">Sí</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+
+</body>
+</html>
