@@ -8,6 +8,8 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
+
+
 <body>
 
 <div th:replace="fragments/header :: header"></div>
@@ -19,12 +21,14 @@
         <ul id="funciones">
             <li><a th:href="@{/registro}">Registrar Alumnos</a></li>
             <li><a th:href="@{/asistencia/hoy}">Lista de Asistencia</a></li>
-            <li><a th:href="@{/usuarios/all}">Estadísticas</a></li>
+            <li><a th:href="@{/usuarios/all}">Mis Usuarios</a></li>
         </ul>
     </main>
 
     <aside>
         <h3>Estadísticas</h3>
+        <canvas id="graficoUsuarios" width="400" height="200"></canvas>
+
     </aside>
 </div>
 

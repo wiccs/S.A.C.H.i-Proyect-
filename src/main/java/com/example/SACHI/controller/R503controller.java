@@ -1,4 +1,7 @@
-package com.example.SACHI;
+package com.example.SACHI.controller;
+import com.example.SACHI.AutentRequest;
+import com.example.SACHI.FingerprintRequest;
+import com.example.SACHI.RegistroAlumnoDTO;
 import com.example.SACHI.model.Asistencia;
 import com.example.SACHI.model.Usuario;
 import com.example.SACHI.repository.AsistenciaRepository;

@@ -1,4 +1,4 @@
-package com.example.SACHI;
+package com.example.SACHI.controller;
 
 import com.example.SACHI.model.Asistencia;
 import com.example.SACHI.repository.AsistenciaRepository;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller // Este encabezado es util para vistas HMTL en modelo mvc
 
@@ -31,4 +32,7 @@ public class AsistenciaController {
         model.addAttribute("asistencias", asistenciasHoy);
         return "asistencias-hoy"; // apunta a src/main/resources/templates/asistencias-hoy.html
     }
+
+
+
 }

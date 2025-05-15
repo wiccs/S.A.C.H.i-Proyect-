@@ -10,6 +10,9 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Page<Usuario> findByUsuarioNombreContaining(String nombre, Pageable pageable);
 
+
+
+
 }
 
 

@@ -13,4 +13,5 @@ public interface AsistenciaRepository extends JpaRepository<Asistencia, Long> {
     List <Asistencia> findByAsistenciaFecha (LocalDate asistencia_fecha);
 
 
+
 }

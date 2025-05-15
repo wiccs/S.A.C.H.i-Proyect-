@@ -42,6 +42,9 @@
             <th>Apellido</th>
             <th>Telefono</th>
             <th>Correo</th>
+            <th>Acciones</th>
+
+
         </tr>
         </thead>
 
@@ -52,13 +55,22 @@
             <td th:text="${usuario.usuarioApellido}">Apellido</td>
             <td th:text="${usuario.usuarioTelefono}">2025-04-28</td>
             <td th:text="${usuario.usuarioCorreo}">08:15</td>
+            <td>
+                <div id="botonesAcciones">
+                    <a id="acciones">Editar</a>
+                    <a th:href="@{/usuarios/eliminar/{id}(id=${usuario.usuario_id})}" id="acciones">Eliminar</a>
+
+
+                </div>
+            </td>
+
         </tr>
         </tbody>
     </table>
 
 </div>
 
-<div th:replace="fragments/footer :: footer"></div>
+
 
 </body>
 </html>

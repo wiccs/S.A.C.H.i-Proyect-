@@ -1,4 +1,4 @@
-package com.example.SACHI;
+package com.example.SACHI.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 

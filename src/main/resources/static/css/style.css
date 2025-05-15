@@ -346,6 +346,30 @@ margin: 10px;
 
 
 
+#botonesAcciones{
+    display: flex;
+    justify-content: center; /* Centra los botones de paginación */
+    margin: 5px;
+}
+#acciones{
+    background-color: rgba(16, 40, 63, 0.141);
+    border-radius: 5px;
+    margin: 5px;
+    text-align: center;
+    font-size: 10px;
+    color: rgb(1, 7, 22);
+
+
+
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(1, 5, 31, 0.304); /* Efecto de brillo */
+    transition: 0.3s ease-in-out;
+}
+
+
+
+
 
 
 
