@@ -23,7 +23,7 @@ public class Usuario {
     @Column(name = "usuario_correo")
     private String usuarioCorreo;
 
-    @Column(name = "usuario_template")
+    @Column(name = "usuario_template", length = 1000)
     @Lob //Encabezado para "grandes objetos binarios" (BLOB)
     private String usuarioTemplate;
 

@@ -12,6 +12,9 @@ public interface AsistenciaRepository extends JpaRepository<Asistencia, Long> {
     //almacenen en la lista.
     List <Asistencia> findByAsistenciaFecha (LocalDate asistencia_fecha);
 
+    List<Asistencia> findByAsistenciaFechaBetween(LocalDate inicio, LocalDate fin);
+
+
 
 
 }

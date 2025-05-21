@@ -9,10 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,6 +22,8 @@ public class UsuarioController {
     //Inyectamos Nuestro repositorio:
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private R503controller r503controller;
 
 
     //Este controlaodr se encarga de mostrar los registros, de la paginacion y la busqueda.
@@ -41,7 +40,7 @@ public class UsuarioController {
 
         if (query != null && !query.isEmpty()) {
             paginaUsuarios = usuarioRepository.findByUsuarioNombreContaining(query, pageable);
-            // Ejemplo: método que filtra por nombre con paginación
+
         } else {
             paginaUsuarios = usuarioRepository.findAll(pageable);
         }
@@ -57,8 +56,26 @@ public class UsuarioController {
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id) {
         usuarioRepository.deleteById(id);  // usar la instancia
+        r503controller.EliminarConR503(id);
         return "redirect:/usuarios/all";
     }
+
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("ID no válido: " + id));
+        model.addAttribute("usuario", usuario);
+        return "ActualizarUsuarios"; // el HTML Thymeleaf
+    }
+
+    @PostMapping("/actualizar")
+    public String actualizarUsuario(@ModelAttribute Usuario usuario) {
+        usuarioRepository.save(usuario); // Spring hace el UPDATE
+        return "redirect:/usuarios/all"; // redirige a la lista de usuarios
+    }
+
+
+
+
 
 
 

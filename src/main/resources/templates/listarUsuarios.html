@@ -21,15 +21,7 @@
 
 <h1>Usuarios Registrados</h1>
 
-<div id="paginacion">
-    <a id="controladorPage" th:if="${currentPage > 0}"
-       th:href="@{/usuarios/all(page=${currentPage - 1}, size=5, query=${query})}">Anterior</a>
 
-    <span>Página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
-
-    <a id="controladorPage" th:if="${currentPage + 1 < totalPages}"
-       th:href="@{/usuarios/all(page=${currentPage + 1}, size=5, query=${query})}">Siguiente</a>
-</div>
 
 <div id="contenedor">
     <div th:replace="fragments/sidebar :: sidebar"></div>
@@ -57,7 +49,7 @@
             <td th:text="${usuario.usuarioCorreo}">08:15</td>
             <td>
                 <div id="botonesAcciones">
-                    <a id="acciones">Editar</a>
+                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.usuario_id})}" id="acciones">Editar</a>
                     <a th:href="@{/usuarios/eliminar/{id}(id=${usuario.usuario_id})}" id="acciones">Eliminar</a>
 
 
