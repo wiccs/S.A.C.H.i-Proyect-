@@ -42,15 +42,15 @@
 
         <tbody>
         <tr th:each="usuario : ${usuarios}">
-            <td th:text="${usuario.usuario_id}">1</td>
+            <td th:text="${usuario.usuarioId}">1</td>
             <td th:text="${usuario.usuarioNombre}">Nombre</td>
             <td th:text="${usuario.usuarioApellido}">Apellido</td>
             <td th:text="${usuario.usuarioTelefono}">2025-04-28</td>
             <td th:text="${usuario.usuarioCorreo}">08:15</td>
             <td>
                 <div id="botonesAcciones">
-                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.usuario_id})}" id="acciones">Editar</a>
-                    <a th:href="@{/usuarios/eliminar/{id}(id=${usuario.usuario_id})}" id="acciones">Eliminar</a>
+                    <a th:href="@{/usuarios/editar/{id}(id=${usuario.usuarioId})}" id="acciones">Editar</a>
+                    <a th:href="@{/usuarios/eliminar/{id}(id=${usuario.usuarioId})}" id="acciones">Eliminar</a>
 
 
                 </div>

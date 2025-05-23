@@ -10,7 +10,7 @@ public class Usuario {
 
     @Id  // Esto indica que esta propiedad será la clave primaria de la tabla
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Esto hace que el ID se genere automáticamente al guardar un nuevo usuario
-    private Long usuario_id;
+    private Long usuarioId;
 
     @Column(name = "usuario_nombre")
     private String usuarioNombre;
@@ -52,12 +52,12 @@ public class Usuario {
         return usuarioNombre;
     }
 
-    public Long getUsuario_id() {
-        return usuario_id;
+    public Long getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setUsuario_id(Long id) {
-        this.usuario_id = id;
+    public void setUsuarioId(Long id) {
+        this.usuarioId = id;
     }
 
 

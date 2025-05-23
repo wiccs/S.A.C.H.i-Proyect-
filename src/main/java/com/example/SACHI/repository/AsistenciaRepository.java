@@ -4,6 +4,8 @@ import com.example.SACHI.model.Asistencia;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+
 import java.util.List;
 
 public interface AsistenciaRepository extends JpaRepository<Asistencia, Long> {
@@ -13,6 +15,8 @@ public interface AsistenciaRepository extends JpaRepository<Asistencia, Long> {
     List <Asistencia> findByAsistenciaFecha (LocalDate asistencia_fecha);
 
     List<Asistencia> findByAsistenciaFechaBetween(LocalDate inicio, LocalDate fin);
+
+    List<Asistencia> findByUsuarioUsuarioIdAndAsistenciaFechaBetween(Long usuarioId, LocalDate fechaInicio, LocalDate fechaFin);
 
 
 

@@ -14,7 +14,7 @@ public class Asistencia {
     private LocalDate asistenciaFecha;
     @Column(name = "asistencia_hora")
     private LocalTime asistenciaHora;
-    @Column(name = "asistencia_valor")
+    @Column(name = "asistencia_valor", columnDefinition = "TINYINT(1)")
     private boolean asistenciaValor; // true = asistió, false = no asistió
 
     @ManyToOne
