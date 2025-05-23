@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACHI PROYECT!</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div id="buscador">
+    <form method="get" action="/usuarios/all">
+        <input type="text" name="query" th:value="${query}">
+        <button type="submit">Buscar</button>
+    </form>
+</div>
+
+
+<h1>Usuarios Registrados</h1>
+
+
+
+<div id="contenedor">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <!-- contenido principal-->
+    <main>
+        <h2>Buscar asistencias por fecha o rango</h2>
+
+        <form method="get" action="/asistencia/reportes">
+            <input type="hidden" name="usuarioId" value="1">
+            <input type="hidden" name="nombreUsuario" value="Administrador">
+
+            <label>Desde: <input type="date" name="fechaInicio" required></label>
+            <label>Hasta: <input type="date" name="fechaFin" required></label>
+
+            <button type="submit">Descargar PDF</button>
+        </form>
+    </main>
+
+</div>
+
+
+
+</body>
+</html>

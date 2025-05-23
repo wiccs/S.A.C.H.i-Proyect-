@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACHI PROYECT!</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+
+<h1>Usuarios Registrados</h1>
+
+
+
+<div id="contenedor">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <!-- contenido principal-->
+    <main>
+        <form  th:object="${usuario}" method="post" action="/usuarios/actualizar"
+              id="formularioRegistro"
+              NAME="RegistroDactilar"
+            >
+            <!-- Contenido del formulario -->
+            <h1>Formulario de Registro de alumno</h1>
+            <label id="LABEL">
+                Actualice los datos del formulario con los datos del estudiante
+            </label>
+
+            <div>
+
+                <input type="hidden" th:field="*{usuario_id}" />
+
+                <input type="text" th:field="*{usuarioNombre}" />
+
+                <input type="text" th:field="*{usuarioApellido}" />
+
+                <input type="text" th:field="*{usuarioTelefono}" />
+
+                <input type="text" th:field="*{usuarioCorreo}" />
+
+
+            </div>
+            <button type="submit">Actualizar</button>
+
+        </form>
+    </main>
+
+</div>
+
+
+
+</body>
+</html>
