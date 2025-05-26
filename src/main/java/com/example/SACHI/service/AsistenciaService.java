@@ -42,30 +42,23 @@ public class AsistenciaService {
     }
 
 
-    public Map<LocalDate, Map<String, Boolean>> obtenerAsistenciasPorHorario(Long usuarioId, LocalDate desde, LocalDate hasta) {
-        List<Asistencia> asistencias = asistenciaRepository.findByUsuarioUsuarioIdAndAsistenciaFechaBetween(usuarioId, desde, hasta);
+    public Map<Long, Map<LocalDate, Map<String, Boolean>>> obtenerAsistenciasPorHorario(LocalDate desde, LocalDate hasta) {
+        List<Asistencia> asistencias = asistenciaRepository.findByAsistenciaFechaBetween(desde, hasta);
 
-        Map<LocalDate, Map<String, Boolean>> resultado = new TreeMap<>();
+        Map<Long, Map<LocalDate, Map<String, Boolean>>> resultado = new HashMap<>();
 
         System.out.println("Asistencias obtenidas: " + asistencias);
 
         for (Asistencia a : asistencias) {
-            System.out.println("Registro: fecha=" + a.getAsistenciaFecha() +
-                    ", hora=" + a.getAsistenciaHora() +
-                    ", valor=" + a.isAsistenciaValor());
+            Long usuarioId = a.getUsuario().getUsuarioId();
 
-            if (!a.isAsistenciaValor()) {
-                System.out.println("Asistencia ignorada por valor false");
-                continue;
-            }
+            // Asegurar que haya mapa para el usuario
+            resultado.computeIfAbsent(usuarioId, u -> new TreeMap<>());
 
-            String franja = determinarFranjaHoraria(a.getAsistenciaHora());
-//            if (franja.equals("fuera_de_rango")) {
-//                System.out.println("Asistencia ignorada por fuera de rango");
-//                continue;
-//            }
+            Map<LocalDate, Map<String, Boolean>> mapaPorFecha = resultado.get(usuarioId);
 
-            resultado.computeIfAbsent(a.getAsistenciaFecha(), f -> {
+            // Asegurar que haya mapa para la fecha
+            mapaPorFecha.computeIfAbsent(a.getAsistenciaFecha(), f -> {
                 Map<String, Boolean> map = new HashMap<>();
                 map.put("mañana", false);
                 map.put("tarde", false);
@@ -73,24 +66,79 @@ public class AsistenciaService {
                 return map;
             });
 
-            resultado.get(a.getAsistenciaFecha()).put(franja, true);
-        }
+            if (!a.isAsistenciaValor()) {
+                System.out.println("Asistencia ignorada por valor false");
+                continue;
+            }
 
+            String franja = determinarFranjaHoraria(a.getAsistenciaHora());
+
+            mapaPorFecha.get(a.getAsistenciaFecha()).put(franja, true);
+        }
 
         return resultado;
     }
 
-    public byte[] generarReporteAsistenciaPDF(String nombreUsuario, Map<LocalDate, Map<String, Boolean>> asistencias) throws Exception {
-        Document document = new Document();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PdfWriter.getInstance(document, out);
-        document.open();
+//Para un solo usuario.
+//    public byte[] generarReporteAsistenciaPDF(String nombreUsuario, Map<LocalDate, Map<String, Boolean>> asistencias) throws Exception {
+//        Document document = new Document();
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        PdfWriter.getInstance(document, out);
+//        document.open();
+//
+//        Font titulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+//        Font texto = FontFactory.getFont(FontFactory.HELVETICA, 12);
+//
+//        document.add(new Paragraph("Reporte de Asistencia", titulo));
+//        document.add(new Paragraph("Nombre: " + nombreUsuario, texto));
+//        document.add(new Paragraph(" "));
+//
+//        PdfPTable tabla = new PdfPTable(4);
+//        tabla.setWidthPercentage(100);
+//        tabla.setWidths(new float[]{3, 2, 2, 2});
+//
+//        tabla.addCell("Fecha");
+//        tabla.addCell("Mañana");
+//        tabla.addCell("Tarde");
+//        tabla.addCell("Noche");
+//
+//        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//        for (Map.Entry<LocalDate, Map<String, Boolean>> entrada : asistencias.entrySet()) {
+//            tabla.addCell(formatoFecha.format(entrada.getKey()));
+//
+//            Map<String, Boolean> horarios = entrada.getValue();
+//            tabla.addCell(horarios.getOrDefault("mañana", false) ? "●" : "✖");
+//            tabla.addCell(horarios.getOrDefault("tarde", false) ? "●" : "✖");
+//            tabla.addCell(horarios.getOrDefault("noche", false) ? "●" : "✖");
+//        }
+//
+//        document.add(tabla);
+//        document.close();
+//
+//        return out.toByteArray(); // Para que lo envíes como descarga
+//    }
+public byte[] generarReporteAsistenciaPDFParaTodos(Map<Long, Map<LocalDate, Map<String, Boolean>>> asistenciasPorUsuario) throws Exception {
+    Document document = new Document();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    PdfWriter.getInstance(document, out);
+    document.open();
 
-        Font titulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
-        Font texto = FontFactory.getFont(FontFactory.HELVETICA, 12);
+    Font titulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+    Font subtitulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+    Font texto = FontFactory.getFont(FontFactory.HELVETICA, 12);
 
-        document.add(new Paragraph("Reporte de Asistencia", titulo));
-        document.add(new Paragraph("Nombre: " + nombreUsuario, texto));
+    document.add(new Paragraph("Reporte de Asistencia de Todos los Usuarios", titulo));
+    document.add(new Paragraph(" "));
+
+    DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    for (Map.Entry<Long, Map<LocalDate, Map<String, Boolean>>> usuarioEntry : asistenciasPorUsuario.entrySet()) {
+        Long usuarioId = usuarioEntry.getKey();
+        Map<LocalDate, Map<String, Boolean>> asistencias = usuarioEntry.getValue();
+
+        // Título para cada usuario
+        document.add(new Paragraph("Usuario ID: " + usuarioId, subtitulo));
         document.add(new Paragraph(" "));
 
         PdfPTable tabla = new PdfPTable(4);
@@ -102,8 +150,6 @@ public class AsistenciaService {
         tabla.addCell("Tarde");
         tabla.addCell("Noche");
 
-        DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
         for (Map.Entry<LocalDate, Map<String, Boolean>> entrada : asistencias.entrySet()) {
             tabla.addCell(formatoFecha.format(entrada.getKey()));
 
@@ -114,8 +160,12 @@ public class AsistenciaService {
         }
 
         document.add(tabla);
-        document.close();
-
-        return out.toByteArray(); // Para que lo envíes como descarga
+        document.add(new Paragraph(" ")); // Espacio entre usuarios
     }
+
+    document.close();
+
+    return out.toByteArray();
+}
+
 }

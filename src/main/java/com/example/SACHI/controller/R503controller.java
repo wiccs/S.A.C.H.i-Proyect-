@@ -28,6 +28,8 @@ import java.util.Optional;
 
 public class R503controller {
 
+
+    public static String ipEsp32 = "192.168.0.207";
     private static String ultimaPlantillaBase64 = null;
     private static String idHuella = null;
     private static String idAutent = null;
@@ -55,8 +57,8 @@ public class R503controller {
     public String controlarR503(@RequestParam String estado) {
         R503 = estado;
 
-        // URL del ESP32 (cambia la IP según la que tenga en tu red)
-        String urlESP = "http://192.168.205.205/R503?estado=" + estado; //192.168.227.205 (celular) o (192.168.1.70)
+        // URL del ESP32
+        String urlESP = "http://" + ipEsp32 + "/R503?estado=" + estado; //192.168.227.205 (celular) o (192.168.1.70)
 
         // Enviar la petición al ESP32
         RestTemplate restTemplate = new RestTemplate();
@@ -148,7 +150,7 @@ public class R503controller {
     //Controlador post para activar la autenticacion del ESP32:
     @GetMapping("/autenticar")
     public ResponseEntity<String> autenticarConR503()   {
-        String urlESP = "http://192.168.205.205/R503?estado=Autenticando";
+        String urlESP = "http://" + ipEsp32 + "/R503?estado=Autenticando";
 
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
@@ -164,7 +166,7 @@ public class R503controller {
 
     @GetMapping("/formatear")
     public ResponseEntity<String> formatear()   {
-        String urlESP = "http://192.168.205.205/R503?estado=Formateando";
+        String urlESP = "http://" + ipEsp32 + "/R503?estado=Formateando";
 
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
@@ -174,7 +176,7 @@ public class R503controller {
 
     @GetMapping("/reiniciar")
     public ResponseEntity<String> reiniciarConR503()   {
-        String urlESP = "http://192.168.205.205/R503?estado=Encendido";
+        String urlESP = "http://" + ipEsp32 + "/R503?estado=Encendido";
 
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
@@ -206,7 +208,7 @@ public class R503controller {
     //A este Get accede el Esp32 para eliminar algo.
     @GetMapping("/eliminar")
     public ResponseEntity<String> EliminarConR503(Long id)   {
-        String urlESP = "http://192.168.205.205/R503?estado=Eliminando&id=" + id;
+        String urlESP = "http://" + ipEsp32 + "/R503?estado=Eliminando&id=" + id;
 
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);

@@ -6,13 +6,17 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalTime;
 
+import static com.example.SACHI.controller.R503controller.ipEsp32;
+
 @Service
 public class R503service {
+
+    String ipSistemaESP32 = " ";
 
 
     public String autenticarConR503auto() {
         System.out.println("Autenticacion automaticada activada");
-        String urlESP = "http://192.168.205.205/R503?estado=autoAutentic";
+        String urlESP = "http://" + ipEsp32 + "/R503?estado=autoAutentic";
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
         return "Se envió autenticación al ESP32. Respuesta: " + respuestaESP;
@@ -20,7 +24,7 @@ public class R503service {
 
     public String DesactivarAutR503auto() {
         System.out.println("Autenticacion automaticada desactivada");
-        String urlESP = "http://192.168.205.205/R503?estado=Encendido";
+        String urlESP = "http://" + ipEsp32 + "/R503?estado=Encendido";
         RestTemplate restTemplate = new RestTemplate();
         String respuestaESP = restTemplate.getForObject(urlESP, String.class);
         return "Se envió autenticación al ESP32. Respuesta: " + respuestaESP;

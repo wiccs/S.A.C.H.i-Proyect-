@@ -112,25 +112,28 @@ public class AsistenciaController {
 
     @GetMapping("/reportes")
     public ResponseEntity<byte[]> generarReporteAsistencia(
-            @RequestParam Long usuarioId,
-            @RequestParam String nombreUsuario,
+
+
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
     ) {
         try {
-            System.out.println("UsuarioId = " + usuarioId);
-            System.out.println("Su Nombre es = " + nombreUsuario);
+
             System.out.println("Su fecha es = " + fechaInicio);
             System.out.println("Su fecha final es = " + fechaFin);
 
             // 1. Obtener asistencias procesadas por fecha y franja horaria
-            Map<LocalDate, Map<String, Boolean>> asistencias =
-                    asistenciaService.obtenerAsistenciasPorHorario(usuarioId, fechaInicio, fechaFin);
+//            Map<LocalDate, Map<String, Boolean>> asistencias =
+//                    asistenciaService.obtenerAsistenciasPorHorario(fechaInicio, fechaFin);
+
+            Map<Long, Map<LocalDate, Map<String, Boolean>>> asistencias =
+                    asistenciaService.obtenerAsistenciasPorHorario(fechaInicio, fechaFin);
+
 
             System.out.println("Asistencias encontradas: " + asistencias);
 
             // 2. Generar el PDF
-            byte[] pdf = asistenciaService.generarReporteAsistenciaPDF(nombreUsuario, asistencias);
+            byte[] pdf = asistenciaService.generarReporteAsistenciaPDFParaTodos(asistencias);
 
             // 3. Preparar headers para que se descargue el archivo
             HttpHeaders headers = new HttpHeaders();
