@@ -14,8 +14,8 @@ public class Asistencia {
     private LocalDate asistenciaFecha;
     @Column(name = "asistencia_hora")
     private LocalTime asistenciaHora;
-    @Column(name = "asistencia_valor", columnDefinition = "TINYINT(1)")
-    private boolean asistenciaValor; // true = asistió, false = no asistió
+    @Column(name = "asistencia_valor")
+    private boolean asistenciaValor;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id") // Esta es la forma en JPA de hacer foreign key, el campo se llama: usuario_id
