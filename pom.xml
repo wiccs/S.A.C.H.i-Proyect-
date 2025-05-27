@@ -84,6 +84,12 @@
 			<version>1.3.30</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version> <!-- o la versión más reciente -->
+		</dependency>
+
 	</dependencies>
 
 	<build>
