@@ -60,6 +60,16 @@
         </tbody>
     </table>
 
+    <div id="paginacion">
+        <a id="controladorPage" th:if="${currentPage > 0}"
+           th:href="@{/usuarios/all(page=${currentPage - 1}, size=5)}">Anterior</a>
+
+        <span>Página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+
+        <a id="controladorPage" th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/usuarios/all(page=${currentPage + 1}, size=5)}">Siguiente</a>
+    </div>
+
 </div>
 
 

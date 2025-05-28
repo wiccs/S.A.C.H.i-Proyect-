@@ -24,7 +24,7 @@ public class Usuario {
     private String usuarioCorreo;
 
     @Column(name = "usuario_template", length = 1000)
-    @Lob //Encabezado para "grandes objetos binarios" (BLOB)
+//    @Lob //Encabezado para "grandes objetos binarios" (BLOB)
     private String usuarioTemplate;
 
     @Column(name = "usuario_fingerId")
