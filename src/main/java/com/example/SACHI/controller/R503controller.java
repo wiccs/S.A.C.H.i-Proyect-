@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:8080")
+//@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 
 @RestController //Indica que el controlador manejara respuestas REST (JSON )
 @RequestMapping("/R503") //Esta es la ruta(EndPoint)
