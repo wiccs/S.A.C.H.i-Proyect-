@@ -3,22 +3,19 @@ package com.example.SACHI;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+
+
+
+import org.springframework.web.bind.annotation.*;
+@CrossOrigin(origins = "*") // Permite solicitudes desde cualquier origen
 
 @SpringBootApplication
-@EnableScheduling
-public class SachiApplication extends SpringBootServletInitializer {
+@EnableScheduling //Permite activar funciones de forma automatica.
+public class SachiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication app = new SpringApplication(SachiApplication.class);
-
-		// Lee el puerto de la variable de entorno PORT (usada por Railway)
-		String port = System.getenv("PORT");
-		if (port != null) {
-			app.setDefaultProperties(java.util.Collections.singletonMap("server.port", port));
-		}
-
-		app.run(args);
+		SpringApplication.run(SachiApplication.class, args);
 	}
+
 }

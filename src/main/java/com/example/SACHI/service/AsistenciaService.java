@@ -30,11 +30,11 @@ public class AsistenciaService {
     private AsistenciaRepository asistenciaRepository;
 
     private String determinarFranjaHoraria(LocalTime hora) {
-        if (hora.isAfter(LocalTime.of(8, 59)) && hora.isBefore(LocalTime.of(10, 1))) {
+        if (hora.isAfter(LocalTime.of(9, 59)) && hora.isBefore(LocalTime.of(11, 1))) {
             return "mañana";
         } else if (hora.isAfter(LocalTime.of(13, 59)) && hora.isBefore(LocalTime.of(15, 1))) {
             return "tarde";
-        } else if (hora.isAfter(LocalTime.of(21, 59)) && hora.isBefore(LocalTime.of(22, 59))) {
+        } else if (hora.isAfter(LocalTime.of(19, 59)) && hora.isBefore(LocalTime.of(22, 59))) {
             return "noche";
         } else {
             return "fuera_de_rango";
@@ -43,6 +43,7 @@ public class AsistenciaService {
 
 
     public Map<Long, Map<LocalDate, Map<String, Boolean>>> obtenerAsistenciasPorHorario(LocalDate desde, LocalDate hasta) {
+
         List<Asistencia> asistencias = asistenciaRepository.findByAsistenciaFechaBetween(desde, hasta);
 
         Map<Long, Map<LocalDate, Map<String, Boolean>>> resultado = new HashMap<>();
@@ -50,9 +51,11 @@ public class AsistenciaService {
         System.out.println("Asistencias obtenidas: " + asistencias);
 
         for (Asistencia a : asistencias) {
+
             Long usuarioId = a.getUsuario().getUsuarioId();
 
-            // Asegurar que haya mapa para el usuario
+            // Asegurar que haya mapa para el usuario ComputeIfAbsent evalua si una clave ya existe en el mapa si no usa
+            //La funcion lambda para crear uno
             resultado.computeIfAbsent(usuarioId, u -> new TreeMap<>());
 
             Map<LocalDate, Map<String, Boolean>> mapaPorFecha = resultado.get(usuarioId);
@@ -167,5 +170,28 @@ public byte[] generarReporteAsistenciaPDFParaTodos(Map<Long, Map<LocalDate, Map<
 
     return out.toByteArray();
 }
+
+
+    public Map<String, Long> contarAsistenciasPorFranjaHoy() {
+        LocalDate hoy = LocalDate.now();
+        List<Asistencia> asistenciasHoy = asistenciaRepository.findByAsistenciaFecha(hoy);
+
+        Map<String, Long> conteo = new HashMap<>();
+        conteo.put("mañana", 0L);
+        conteo.put("tarde", 0L);
+        conteo.put("noche", 0L);
+
+        for (Asistencia a : asistenciasHoy) {
+            if (!a.isAsistenciaValor()) continue;
+
+            String franja = determinarFranjaHoraria(a.getAsistenciaHora());
+            if (!franja.equals("fuera_de_rango")) {
+                conteo.put(franja, conteo.get(franja) + 1);
+            }
+        }
+
+        return conteo;
+    }
+
 
 }

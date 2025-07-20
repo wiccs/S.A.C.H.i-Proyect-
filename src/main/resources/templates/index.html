@@ -27,7 +27,41 @@
 
     <aside>
         <h3>Estadísticas</h3>
-        <canvas id="graficoUsuarios" width="400" height="200"></canvas>
+        <head>
+            <title>Asistencias del Día</title>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        </head>
+        <body>
+
+        <h2>Asistencias por franja horaria hoy</h2>
+        <canvas id="asistenciaChart" width="400" height="200"></canvas>
+
+        <script>
+            fetch('/asistencia/por-franja')
+              .then(response => response.json())
+              .then(data => {
+                const ctx = document.getElementById('asistenciaChart').getContext('2d');
+                const chart = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                    labels: ['Mañana', 'Tarde', 'Noche'],
+                    datasets: [{
+                      label: 'Número de asistencias',
+                      data: [data.mañana || 0, data.tarde || 0, data.noche || 0],
+                      backgroundColor: ['#4CAF50', '#FFC107', '#2196F3']
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      y: { beginAtZero: true, precision: 0 }
+                    }
+                  }
+                });
+              })
+              .catch(error => console.error('Error al cargar datos:', error));
+        </script>
+
+        </body>
 
     </aside>
 </div>

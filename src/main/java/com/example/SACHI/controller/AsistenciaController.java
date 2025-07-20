@@ -16,10 +16,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model; //Se encarga de las vistas al parecer
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -41,12 +38,13 @@ public class AsistenciaController {
 
     private final AsistenciaService asistenciaService;
 
-    //Esta es la forma en la que se inyecta un servicio:
+    //Esta es la forma mas completa en la que se inyecta un servicio:
     @Autowired
     public AsistenciaController(AsistenciaService asistenciaService) {
         this.asistenciaService = asistenciaService;
     }
 
+    //1.- Este controlador se encarga de mostrar los registros de asistencia actual en una vista HTML.
     @GetMapping("/hoy")
     public String verAsistenciasHoy(Model model) {
         LocalDate hoy = LocalDate.now();
@@ -57,30 +55,34 @@ public class AsistenciaController {
         return "asistencias-hoy"; // apunta a src/main/resources/templates/asistencias-hoy.html
     }
 
-    @GetMapping("/filtrar")
-    public String filtrarAsistencias(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-            Model model
-    ) {
-        List<Asistencia> asistencias;
-
-        if (fechaInicio != null && fechaFin != null) {
-            asistencias = asistenciaRepository.findByAsistenciaFechaBetween(fechaInicio, fechaFin);
-        } else if (fechaInicio != null) {
-            asistencias = asistenciaRepository.findByAsistenciaFecha(fechaInicio);
-        } else {
-            asistencias = asistenciaRepository.findAll(); // o vacía
-        }
-
-        model.addAttribute("asistencias", asistencias);
-        return "usuariosFiltrados";
-    }
-
+    //2.-Este controlador muestra una vista HTML de un  selector de rango de fecha para asistencias.
     @GetMapping("/filtro")
     public String verfiltro(Model model) {
         return "selector-fechas";
     }
+
+    /*3.- Este controlador se encarga de la funcion de filtro de asistencias, recibe como parametro un  rango de fechas
+    * y posteriormente retorna una vista con los registros de asistencia filtados por el rango recibido.*/
+    @GetMapping("/filtrar")
+        public String filtrarAsistencias(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            Model model
+        ) {
+            List<Asistencia> asistencias;
+
+            if (fechaInicio != null && fechaFin != null) {
+            asistencias = asistenciaRepository.findByAsistenciaFechaBetween(fechaInicio, fechaFin);
+             } else if (fechaInicio != null) {
+            asistencias = asistenciaRepository.findByAsistenciaFecha(fechaInicio);
+            } else {
+            asistencias = asistenciaRepository.findAll(); // o vacía
+             }
+
+            model.addAttribute("asistencias", asistencias);
+             return "usuariosFiltrados";
+         }
+
 
     @GetMapping("/reporte")
     public void generarReporte(HttpServletResponse response) throws IOException {
@@ -110,10 +112,13 @@ public class AsistenciaController {
         document.close();
     }
 
+
+    /*4.- Este controlador se encarga de generar una estructura de tipo MAP que se encarga de alamacenar la asistencia
+    * del usuario, incluyendo s id, mapaeado a una estructura anidada que contiene la fecha del registro, ligado a una
+    * franja horaria (mañana,tarde,noche) ligado a un valor booleano (verdadero o falso.) respectivamente.*/
+
     @GetMapping("/reportes")
     public ResponseEntity<byte[]> generarReporteAsistencia(
-
-
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin
     ) {
@@ -139,7 +144,7 @@ public class AsistenciaController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDisposition(ContentDisposition
-                    .attachment()
+                    .inline()
                     .filename("reporte_asistencia.pdf")
                     .build());
 
@@ -151,9 +156,19 @@ public class AsistenciaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }
+
+
     }
 
-   
+
+    @GetMapping("/por-franja")
+    @ResponseBody
+    public Map<String, Long> obtenerConteoAsistenciasHoy() {
+        return asistenciaService.contarAsistenciasPorFranjaHoy();
+    }
+
+
+
 
 
 

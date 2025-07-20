@@ -2,46 +2,106 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SACHI PROYECT!</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        /* Estilos básicos para layout */
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #contenedor {
+            display: flex;
+            min-height: 80vh; /* altura mínima para ver el efecto */
+        }
+
+        /* Barra lateral fija a la izquierda */
+        #sidebar {
+            width: 220px;
+            background-color: #f0f0f0;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        /* Contenido principal ocupa el resto */
+        #contenido-principal {
+            flex: 1;
+            padding: 1.5rem;
+            box-sizing: border-box;
+
+            /* para centrar el selector */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Opcional: centrar el form dentro del main */
+        #selectorcito {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        #selectorcito label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
 
 <div th:replace="fragments/header :: header"></div>
 
 <div id="buscador">
     <form method="get" action="/usuarios/all">
-        <input type="text" name="query" th:value="${query}">
+        <input type="text" name="query" th:value="${query}" />
         <button type="submit">Buscar</button>
     </form>
 </div>
 
-
-<h1>Usuarios Registrados</h1>
-
-
-
 <div id="contenedor">
-    <div th:replace="fragments/sidebar :: sidebar"></div>
 
-    <!-- contenido principal-->
-    <main>
-        <h2>Buscar asistencias por fecha o rango</h2>
+    <!-- Barra lateral -->
+    <div id="sidebar" th:replace="fragments/sidebar :: sidebar"></div>
 
-        <form method="get" action="/asistencia/reportes">
+    <!-- Contenido principal -->
+    <div id="contenido-principal">
+        
+        <div id="selector">
+            <main>
+                <h2>Buscar asistencias por fecha o rango</h2>
 
-            <label>Desde: <input type="date" name="fechaInicio" required></label>
-            <label>Hasta: <input type="date" name="fechaFin" required></label>
+                <form id="selectorcito" method="get" action="/asistencia/reportes">
 
-            <button type="submit">Descargar PDF</button>
-        </form>
-    </main>
+                    <label>Desde:
+                        <input type="date" name="fechaInicio" required />
+                    </label>
+                    <label>Hasta:
+                        <input type="date" name="fechaFin" required />
+                    </label>
+
+                    <button type="submit">Descargar PDF</button>
+                </form>
+            </main>
+        </div>
+    </div>
 
 </div>
 
-
-
 </body>
+
 </html>
